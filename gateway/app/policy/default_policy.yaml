@@ -1,0 +1,73 @@
+name: "default"
+version: "1.0"
+
+rules:
+  - id: "block-critical-injection"
+    description: "Block obvious prompt injection attempts"
+    when:
+      attack_type: "direct_injection"
+      score: ">= 0.8"
+    action: "block"
+    severity: "critical"
+
+  - id: "block-jailbreak"
+    description: "Block high-confidence jailbreak attempts"
+    when:
+      attack_type: "jailbreak"
+      score: ">= 0.7"
+    action: "block"
+    severity: "critical"
+
+  - id: "block-data-exfil"
+    description: "Block any data exfiltration attempt"
+    when:
+      attack_type: "data_exfiltration"
+    action: "block"
+    severity: "critical"
+
+  - id: "block-indirect-high"
+    description: "Block high-confidence indirect injection"
+    when:
+      attack_type: "indirect_injection"
+      score: ">= 0.8"
+    action: "block"
+    severity: "critical"
+
+  - id: "sanitize-medium-injection"
+    description: "Sanitize medium-confidence direct injection"
+    when:
+      attack_type: "direct_injection"
+      score:
+        - ">= 0.5"
+        - "< 0.8"
+    action: "sanitize"
+    severity: "medium"
+
+  - id: "sanitize-medium-jailbreak"
+    description: "Sanitize medium-confidence jailbreak"
+    when:
+      attack_type: "jailbreak"
+      score:
+        - ">= 0.5"
+        - "< 0.7"
+    action: "sanitize"
+    severity: "medium"
+
+  - id: "sanitize-indirect-medium"
+    description: "Sanitize medium-confidence indirect injection"
+    when:
+      attack_type: "indirect_injection"
+      score:
+        - ">= 0.5"
+        - "< 0.8"
+    action: "sanitize"
+    severity: "medium"
+
+  - id: "log-low-risk"
+    description: "Log low-confidence signals without blocking"
+    when:
+      score: ">= 0.3"
+    action: "log_only"
+    severity: "low"
+
+default_action: "allow"

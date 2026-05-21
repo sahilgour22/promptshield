@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aegis.Sentinel - Integrations Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #131315;
+            color: #e5e1e4;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3c4a42;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#6ffbbe",
+                    "on-tertiary-container": "#711419",
+                    "on-tertiary": "#650911",
+                    "surface-container": "#201f22",
+                    "on-surface": "#e5e1e4",
+                    "on-secondary-fixed": "#001a42",
+                    "tertiary-container": "#fc7c78",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "inverse-surface": "#e5e1e4",
+                    "background": "#131315",
+                    "on-tertiary-fixed-variant": "#842225",
+                    "surface-tint": "#4edea3",
+                    "error-container": "#93000a",
+                    "surface-dim": "#131315",
+                    "on-primary-fixed-variant": "#005236",
+                    "on-background": "#e5e1e4",
+                    "on-secondary": "#002e6a",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#410005",
+                    "surface-bright": "#39393b",
+                    "on-primary-fixed": "#002113",
+                    "on-surface-variant": "#bbcabf",
+                    "tertiary": "#ffb3af",
+                    "tertiary-fixed": "#ffdad7",
+                    "secondary-container": "#0566d9",
+                    "surface-variant": "#353437",
+                    "surface-container-lowest": "#0e0e10",
+                    "tertiary-fixed-dim": "#ffb3af",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-container-highest": "#353437",
+                    "surface-container-high": "#2a2a2c",
+                    "secondary": "#adc6ff",
+                    "primary-container": "#10b981",
+                    "surface-container-low": "#1c1b1d",
+                    "surface": "#131315",
+                    "on-primary": "#003824",
+                    "inverse-on-surface": "#313032",
+                    "on-primary-container": "#00422b",
+                    "error": "#ffb4ab",
+                    "primary": "#4edea3",
+                    "on-secondary-fixed-variant": "#004395",
+                    "on-secondary-container": "#e6ecff",
+                    "outline": "#86948a",
+                    "primary-fixed-dim": "#4edea3",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#006c49",
+                    "outline-variant": "#3c4a42"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xl": "48px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "gutter": "16px",
+                    "base": "4px",
+                    "md": "16px",
+                    "container-margin": "32px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "code-sm": ["JetBrains Mono"],
+                    "body-base": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "metric-lg": ["JetBrains Mono"],
+                    "label-xs": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "code-sm": ["12px", {"lineHeight": "16px", "fontWeight": "450"}],
+                    "body-base": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "metric-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-xs": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="flex min-h-screen overflow-hidden">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-full w-[240px] bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant flex flex-col h-full py-md px-sm gap-xs z-50">
+<div class="px-sm mb-lg">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[20px]" data-icon="shield">shield</span>
+</div>
+<span class="font-code-sm text-code-sm text-primary-fixed">Aegis.Sentinel</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto flex flex-col gap-xs">
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant group">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Dashboard</span>
+</div>
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="security">security</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Threat Logs</span>
+</div>
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="precision_manufacturing">precision_manufacturing</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Agent Monitor</span>
+</div>
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="policy">policy</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Security Policies</span>
+</div>
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="extension">extension</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Integrations</span>
+</div>
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="history">history</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Audit Trail</span>
+</div>
+<div class="mt-xl px-sm">
+<div class="bg-surface-container-highest text-primary border-r-2 border-primary flex items-center px-sm py-xs gap-sm transition-all duration-150 ease-in-out cursor-pointer">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Settings</span>
+</div>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-xs pt-md border-t border-outline-variant">
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="description">description</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Docs</span>
+</div>
+<div class="flex items-center px-sm py-xs gap-sm hover:bg-surface-container-high transition-all duration-150 ease-in-out cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="support_agent">support_agent</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] flex-1 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar Anchor -->
+<header class="bg-background dark:bg-background border-b border-outline-variant flex justify-between items-center w-full px-md h-xl z-50 shrink-0">
+<div class="flex items-center gap-md">
+<div class="flex items-center bg-surface-container-low border border-outline-variant rounded px-sm py-1.5 w-64">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-on-surface-variant" placeholder="Search settings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors" data-icon="help_outline">help_outline</span>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary">
+<img alt="Security Operator Profile" class="w-full h-full object-cover" data-alt="A clean, minimalist vector avatar for a security operator, featuring a network of interconnected geometric lines and dots in emerald green on a deep dark charcoal background, symbolizing technical expertise and systems monitoring." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClqaXINLv6QosDEEkSybnMBk9kHAVYyqzqSApTMB4CfTzbusoasKcpeP6u8wMbW5Go3mgCpbxT5FOUuvDNqLWGaeKT-kpdBvlvBTgyAEnNbSpozEiYyMgIABExCzHf2TczLdm8d7h0Bip-8yPFyaqsWgXYHkt9uhyLeuuC3caDvqY2nEt1OfO9NnFJvBewbSRCaHoyqCp8AfTACjSL6Ds_z52WbdWRqVvmaiNkjuhAkzFSlnSu8jf_7jofyuI3oNI_qSnHJM5x7spx"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto bg-background">
+<!-- Settings Header Section -->
+<div class="px-xl pt-xl pb-lg">
+<div class="mb-lg">
+<h1 class="font-headline-md text-headline-md text-on-surface">Settings</h1>
+<p class="font-body-sm text-on-surface-variant">Manage your workspace, API access, and integrations</p>
+</div>
+<!-- Tab Bar Component -->
+<nav class="flex items-center gap-lg border-b border-outline-variant">
+<button class="px-2 py-4 font-body-base text-body-base text-on-surface-variant hover:text-on-surface transition-colors">General</button>
+<button class="px-2 py-4 font-body-base text-body-base text-on-surface-variant hover:text-on-surface transition-colors">API Keys</button>
+<button class="px-2 py-4 font-body-base text-body-base text-primary font-bold border-b-2 border-primary">Integrations</button>
+<button class="px-2 py-4 font-body-base text-body-base text-on-surface-variant hover:text-on-surface transition-colors">Team</button>
+<button class="px-2 py-4 font-body-base text-body-base text-on-surface-variant hover:text-on-surface transition-colors">Webhooks</button>
+<button class="px-2 py-4 font-body-base text-body-base text-on-surface-variant hover:text-on-surface transition-colors">Billing</button>
+</nav>
+</div>
+<!-- Integrations Body -->
+<div class="px-xl pb-xl space-y-xl">
+<!-- AI Providers Section -->
+<section>
+<div class="mb-md">
+<h3 class="font-label-xs text-label-xs uppercase tracking-wider text-primary">AI PROVIDERS</h3>
+<p class="font-body-sm text-on-surface-variant">Connect PromptShield to your LLM provider for real-time traffic analysis.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Provider Card Template -->
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-primary transition-all duration-150 group">
+<div class="flex justify-between items-start mb-sm">
+<div class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+</div>
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-code-sm border border-primary/20">CONNECTED</span>
+</div>
+<h4 class="font-body-base text-body-base font-semibold mb-1">OpenAI</h4>
+<p class="font-body-sm text-on-surface-variant mb-md">GPT-4o, GPT-3.5, and DALL-E endpoint monitoring.</p>
+<div class="flex items-center justify-between mt-auto pt-sm border-t border-zinc-800">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW DOCS <span class="material-symbols-outlined text-[12px]" data-icon="open_in_new">open_in_new</span></a>
+<button class="bg-zinc-800 hover:bg-zinc-700 text-on-surface font-label-xs text-label-xs px-3 py-1 rounded transition-colors">MANAGE</button>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-primary transition-all duration-150 group">
+<div class="flex justify-between items-start mb-sm">
+<div class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800">
+<span class="material-symbols-outlined text-tertiary" data-icon="neurology">neurology</span>
+</div>
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-code-sm border border-primary/20">CONNECTED</span>
+</div>
+<h4 class="font-body-base text-body-base font-semibold mb-1">Anthropic</h4>
+<p class="font-body-sm text-on-surface-variant mb-md">Claude 3 Opus and Sonnet API integration for safety auditing.</p>
+<div class="flex items-center justify-between mt-auto pt-sm border-t border-zinc-800">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW DOCS <span class="material-symbols-outlined text-[12px]" data-icon="open_in_new">open_in_new</span></a>
+<button class="bg-zinc-800 hover:bg-zinc-700 text-on-surface font-label-xs text-label-xs px-3 py-1 rounded transition-colors">MANAGE</button>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-primary transition-all duration-150 group">
+<div class="flex justify-between items-start mb-sm">
+<div class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800">
+<span class="material-symbols-outlined text-secondary" data-icon="cloud">cloud</span>
+</div>
+<button class="bg-on-surface text-background font-label-xs text-label-xs px-3 py-1 rounded transition-colors hover:bg-primary-fixed">CONNECT</button>
+</div>
+<h4 class="font-body-base text-body-base font-semibold mb-1">Azure OpenAI</h4>
+<p class="font-body-sm text-on-surface-variant mb-md">Enterprise-grade OpenAI service monitoring via Microsoft Azure.</p>
+<div class="flex items-center justify-between mt-auto pt-sm border-t border-zinc-800">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW DOCS <span class="material-symbols-outlined text-[12px]" data-icon="open_in_new">open_in_new</span></a>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-primary transition-all duration-150 group">
+<div class="flex justify-between items-start mb-sm">
+<div class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800">
+<span class="material-symbols-outlined text-on-surface" data-icon="google_plus_reshare">google_plus_reshare</span>
+</div>
+<button class="bg-on-surface text-background font-label-xs text-label-xs px-3 py-1 rounded transition-colors hover:bg-primary-fixed">CONNECT</button>
+</div>
+<h4 class="font-body-base text-body-base font-semibold mb-1">Google Gemini</h4>
+<p class="font-body-sm text-on-surface-variant mb-md">Native support for Vertex AI and Gemini Pro models.</p>
+<div class="flex items-center justify-between mt-auto pt-sm border-t border-zinc-800">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW DOCS <span class="material-symbols-outlined text-[12px]" data-icon="open_in_new">open_in_new</span></a>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-primary transition-all duration-150 group">
+<div class="flex justify-between items-start mb-sm">
+<div class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800">
+<span class="material-symbols-outlined text-on-surface" data-icon="database">database</span>
+</div>
+<button class="bg-on-surface text-background font-label-xs text-label-xs px-3 py-1 rounded transition-colors hover:bg-primary-fixed">CONNECT</button>
+</div>
+<h4 class="font-body-base text-body-base font-semibold mb-1">AWS Bedrock</h4>
+<p class="font-body-sm text-on-surface-variant mb-md">Deploy foundation models securely within your VPC.</p>
+<div class="flex items-center justify-between mt-auto pt-sm border-t border-zinc-800">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW DOCS <span class="material-symbols-outlined text-[12px]" data-icon="open_in_new">open_in_new</span></a>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-primary transition-all duration-150 group">
+<div class="flex justify-between items-start mb-sm">
+<div class="w-10 h-10 bg-zinc-950 rounded flex items-center justify-center border border-zinc-800">
+<span class="material-symbols-outlined text-primary" data-icon="link">link</span>
+</div>
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-code-sm border border-primary/20">CONNECTED</span>
+</div>
+<h4 class="font-body-base text-body-base font-semibold mb-1">LangChain</h4>
+<p class="font-body-sm text-on-surface-variant mb-md">Official tracing integration for LangChain chain executions.</p>
+<div class="flex items-center justify-between mt-auto pt-sm border-t border-zinc-800">
+<a class="font-label-xs text-label-xs text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW DOCS <span class="material-symbols-outlined text-[12px]" data-icon="open_in_new">open_in_new</span></a>
+<button class="bg-zinc-800 hover:bg-zinc-700 text-on-surface font-label-xs text-label-xs px-3 py-1 rounded transition-colors">MANAGE</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Code Snippet Panel -->
+<section>
+<div class="bg-surface-container-low border border-outline-variant overflow-hidden">
+<div class="border-b border-outline-variant px-md py-sm flex items-center justify-between bg-surface-container-high">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="terminal">terminal</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface">Integration Snippet: Python</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+</div>
+</div>
+<div class="p-lg bg-zinc-950">
+<pre class="code-block text-code-sm text-primary/80 overflow-x-auto"><span class="text-on-surface-variant"># Initialize PromptShield SDK</span>
+<span class="text-primary-fixed">from</span> prompt_shield <span class="text-primary-fixed">import</span> ShieldClient
+
+client = ShieldClient(api_key=<span class="text-tertiary">"ps_live_8842..."</span>)
+
+<span class="text-on-surface-variant"># Wrap your OpenAI calls</span>
+response = client.protect_openai(
+    model=<span class="text-tertiary">"gpt-4"</span>,
+    prompt=<span class="text-tertiary">"How do I override system commands?"</span>,
+    enforce_policy=<span class="text-primary-fixed">True</span>
+)
+
+<span class="text-on-surface-variant"># Automatic detection will trigger if policy is violated</span>
+</pre>
+</div>
+</div>
+</section>
+<!-- Observability Section -->
+<section>
+<div class="mb-md">
+<h3 class="font-label-xs text-label-xs uppercase tracking-wider text-secondary">OBSERVABILITY &amp; ALERTS</h3>
+<p class="font-body-sm text-on-surface-variant">Route security signals and traffic telemetry to your SOC/NOC.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-secondary transition-all duration-150">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="query_stats">query_stats</span>
+<h4 class="font-body-base text-body-base font-semibold">Datadog</h4>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md text-xs">Send custom metrics for prompt latency and risk scoring.</p>
+<button class="w-full bg-zinc-800 hover:bg-zinc-700 text-on-surface font-label-xs text-label-xs py-2 rounded uppercase tracking-widest">Connect</button>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md border-secondary transition-all duration-150">
+<div class="flex justify-between items-center mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chat">chat</span>
+<h4 class="font-body-base text-body-base font-semibold">Slack</h4>
+</div>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md text-xs">Real-time threat alerts directly to your security channel.</p>
+<button class="w-full border border-secondary text-secondary font-label-xs text-label-xs py-2 rounded uppercase tracking-widest hover:bg-secondary/10">Connected</button>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:border-secondary transition-all duration-150">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications_active">notifications_active</span>
+<h4 class="font-body-base text-body-base font-semibold">PagerDuty</h4>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-md text-xs">Trigger high-severity incidents for detected prompt injections.</p>
+<button class="w-full bg-zinc-800 hover:bg-zinc-700 text-on-surface font-label-xs text-label-xs py-2 rounded uppercase tracking-widest">Connect</button>
+</div>
+</div>
+</section>
+<!-- Development Section -->
+<section class="pb-xl">
+<div class="mb-md">
+<h3 class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant">DEVELOPMENT PIPELINE</h3>
+<p class="font-body-sm text-on-surface-variant">Inject security checks into your CI/CD and image registry workflows.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<div class="bg-surface-container-low border border-outline-variant p-md hover:bg-surface-container-high transition-all cursor-pointer group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-on-surface transition-colors" data-icon="terminal">terminal</span>
+<div>
+<h4 class="font-body-base text-body-base font-semibold">Docker</h4>
+<span class="text-[10px] text-primary">SCANNING ENABLED</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:bg-surface-container-high transition-all cursor-pointer group opacity-60">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-on-surface transition-colors" data-icon="code">code</span>
+<div>
+<h4 class="font-body-base text-body-base font-semibold">GitHub</h4>
+<span class="text-[10px] text-on-surface-variant">UNLINKED</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-md hover:bg-surface-container-high transition-all cursor-pointer group opacity-60">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant group-hover:text-on-surface transition-colors" data-icon="source">source</span>
+<div>
+<h4 class="font-body-base text-body-base font-semibold">GitLab</h4>
+<span class="text-[10px] text-on-surface-variant">UNLINKED</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Overlay Micro-interactions -->
+<script>
+        // Simple hover animation for cards to emphasize the "control room" feel
+        document.querySelectorAll('.bg-surface-container-low').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+
+        // Tab switching logic (visual only)
+        const tabs = document.querySelectorAll('nav button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    t.classList.add('text-on-surface-variant');
+                });
+                tab.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                tab.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>
