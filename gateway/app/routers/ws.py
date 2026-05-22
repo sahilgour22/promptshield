@@ -21,7 +21,7 @@ from app.models import AttackType, Incident, Verdict
 
 logger = structlog.get_logger()
 
-router = APIRouter(tags=["websocket"])
+router = APIRouter(tags=["realtime"])
 
 HEARTBEAT_INTERVAL = 30  # seconds between per-connection pings
 STATS_INTERVAL = 5  # seconds between stats broadcasts

@@ -17,7 +17,7 @@ from typing import Any
 from langchain.agents import create_agent
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.messages import AIMessage, HumanMessage
-from langchain_openai import AzureChatOpenAI
+from langchain_openai import ChatOpenAI
 
 from .tools import get_tools
 
@@ -82,17 +82,16 @@ class ToolCallTracker(BaseCallbackHandler):
 # ── LLM singleton (avoid re-creating the HTTP client per request) ─────────────
 
 
-_llm: AzureChatOpenAI | None = None
+_llm: ChatOpenAI | None = None
 
 
-def _get_llm() -> AzureChatOpenAI:
+def _get_llm() -> ChatOpenAI:
     global _llm
     if _llm is None:
-        _llm = AzureChatOpenAI(
-            azure_deployment=os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-4o-mini"),
-            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
-            api_key=os.environ["AZURE_OPENAI_API_KEY"],
-            api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-02-01"),
+        _llm = ChatOpenAI(
+            model=os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-4.1-mini"),
+            openai_api_key=os.environ["AZURE_OPENAI_API_KEY"],
+            openai_api_base=os.environ["AZURE_OPENAI_BASE_URL"],
             temperature=0,
             max_tokens=1024,
         )

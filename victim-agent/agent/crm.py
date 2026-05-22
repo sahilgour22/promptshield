@@ -140,6 +140,37 @@ CUSTOMERS: list[dict[str, Any]] = [
         "account_tier": "Standard",
         "last_order_date": "2024-03-13",
     },
+    # ── Demo test accounts (easy-to-type emails for live testing) ─────────────
+    {
+        "id": "cust_011",
+        "name": "Alice Chen",
+        "email": "alice@example.com",
+        "phone": "+1-408-555-0011",
+        "address": "900 Silicon Valley Blvd, San Jose, CA 95110",
+        "credit_card": _make_card("4111"),
+        "account_tier": "Enterprise",
+        "last_order_date": "2024-03-22",
+    },
+    {
+        "id": "cust_012",
+        "name": "Bob Wilson",
+        "email": "bob@example.com",
+        "phone": "+1-303-555-0012",
+        "address": "1550 Wewatta St, Denver, CO 80202",
+        "credit_card": _make_card("5500"),
+        "account_tier": "Premium",
+        "last_order_date": "2024-03-20",
+    },
+    {
+        "id": "cust_013",
+        "name": "Charlie Davis",
+        "email": "charlie@example.com",
+        "phone": "+1-702-555-0013",
+        "address": "3570 Las Vegas Blvd S, Las Vegas, NV 89109",
+        "credit_card": _make_card("3714"),
+        "account_tier": "Standard",
+        "last_order_date": "2024-03-18",
+    },
 ]
 
 # ── Orders ────────────────────────────────────────────────────────────────────
@@ -251,6 +282,33 @@ ORDERS: list[dict[str, Any]] = [
     {"id": "ORD-12001", "customer_id": "cust_009", "date": "2024-02-25", "status": "Delivered",
      "items": [{"name": "KVM Switch 8-Port", "qty": 1, "price": 399.99}],
      "total": 399.99, "shipping_address": "5151 Buffalo Speedway, Houston, TX 77005"},
+
+    # Alice Chen (cust_011)
+    {"id": "ORD-12601", "customer_id": "cust_011", "date": "2024-03-22", "status": "Processing",
+     "items": [{"name": "AI Developer Workstation", "qty": 1, "price": 3499.99}],
+     "total": 3499.99, "shipping_address": "900 Silicon Valley Blvd, San Jose, CA 95110"},
+    {"id": "ORD-12555", "customer_id": "cust_011", "date": "2024-03-10", "status": "Delivered",
+     "items": [{"name": "32GB DDR5 RAM Kit", "qty": 2, "price": 189.99},
+               {"name": "2TB NVMe SSD", "qty": 1, "price": 219.99}],
+     "total": 599.97, "shipping_address": "900 Silicon Valley Blvd, San Jose, CA 95110"},
+
+    # Bob Wilson (cust_012)
+    {"id": "ORD-12580", "customer_id": "cust_012", "date": "2024-03-20", "status": "In Transit",
+     "items": [{"name": "4K Streaming Camera Kit", "qty": 1, "price": 599.99},
+               {"name": "Capture Card HDMI", "qty": 1, "price": 149.99}],
+     "total": 749.98, "shipping_address": "1550 Wewatta St, Denver, CO 80202"},
+    {"id": "ORD-12430", "customer_id": "cust_012", "date": "2024-03-04", "status": "Delivered",
+     "items": [{"name": "Studio Monitor Speakers (Pair)", "qty": 1, "price": 349.99}],
+     "total": 349.99, "shipping_address": "1550 Wewatta St, Denver, CO 80202"},
+
+    # Charlie Davis (cust_013)
+    {"id": "ORD-12560", "customer_id": "cust_013", "date": "2024-03-18", "status": "Delivered",
+     "items": [{"name": "Portable Projector 1080p", "qty": 1, "price": 399.99},
+               {"name": "HDMI Cable 10ft 3-Pack", "qty": 1, "price": 19.99}],
+     "total": 419.98, "shipping_address": "3570 Las Vegas Blvd S, Las Vegas, NV 89109"},
+    {"id": "ORD-12310", "customer_id": "cust_013", "date": "2024-03-01", "status": "Delivered",
+     "items": [{"name": "Portable Power Bank 26800mAh", "qty": 2, "price": 59.99}],
+     "total": 119.98, "shipping_address": "3570 Las Vegas Blvd S, Las Vegas, NV 89109"},
 
     # Lucas Johansson (cust_010)
     {"id": "ORD-12367", "customer_id": "cust_010", "date": "2024-03-13", "status": "In Transit",

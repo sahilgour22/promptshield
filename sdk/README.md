@@ -1,82 +1,110 @@
-# PromptShield Python SDK
+# sdk/
 
-Protect LLM applications from prompt injection, jailbreaks, and data exfiltration — in three lines.
+Python SDK for PromptShield — wrap any LLM agent in three lines.
 
-## Install
+## What it does
+
+Intercepts all input and output flowing through your agent and forwards it to the
+PromptShield Gateway for real-time threat analysis. If an attack is detected, raises
+`BlockedByShield` before the content reaches the model (or before the response is
+returned to your code).
+
+## Installation
 
 ```bash
-pip install -e ./sdk                       # local dev
-pip install -e "./sdk[openai]"             # with OpenAI wrapper
-pip install -e "./sdk[all]"                # with all integrations
+pip install promptshield
+# or from source:
+pip install -e ./sdk
 ```
 
-## Quick start
+## Usage
+
+### Wrap an OpenAI client
 
 ```python
+import openai
 from promptshield import Shield
 
-shield = Shield(api_key="ps_...", endpoint="http://localhost:8000")
+client = openai.AsyncOpenAI(api_key="...")
+shield = Shield(api_key="your-key", endpoint="http://localhost:8000")
 
-# Explicit inspection
-result = await shield.inspect(content="user input", direction="input", source="user")
-if result.verdict == "block":
-    raise BlockedByShield(result.reasoning)
+safe_client = shield.wrap(client)
 
-# Wrap OpenAI — every call is automatically inspected
-from openai import AsyncOpenAI
-client = shield.wrap(AsyncOpenAI(api_key="sk-..."))
-response = await client.chat.completions.create(
-    messages=[{"role": "user", "content": "Hello!"}],
+# Use exactly like the normal client — attacks are intercepted transparently
+response = await safe_client.chat.completions.create(
     model="gpt-4o",
+    messages=[{"role": "user", "content": user_input}],
 )
+```
 
-# Wrap LangChain agent
+### Wrap an Anthropic client
+
+```python
+import anthropic
+from promptshield import Shield
+
+client = anthropic.AsyncAnthropic(api_key="...")
+shield = Shield(api_key="your-key", endpoint="http://localhost:8000")
+safe_client = shield.wrap(client)
+```
+
+### Wrap a LangChain agent
+
+```python
 from langchain.agents import AgentExecutor
-protected_agent = shield.wrap(agent_executor)
-result = await protected_agent.ainvoke({"input": "user query"})
+from promptshield import Shield
+
+agent_executor = AgentExecutor(agent=..., tools=...)
+shield = Shield(api_key="your-key", endpoint="http://localhost:8000")
+safe_agent = shield.wrap(agent_executor)
+
+result = await safe_agent.ainvoke({"input": user_input})
+```
+
+### Handling blocked requests
+
+```python
+from promptshield.exceptions import BlockedByShield
+
+try:
+    response = await safe_client.chat.completions.create(...)
+except BlockedByShield as e:
+    print(f"Attack blocked: {e.result.attack_type} (score: {e.result.score})")
+    # e.result is a DetectionResult with full details
 ```
 
 ## Configuration
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `api_key` | required | Your PromptShield API key (`ps_...`) |
-| `endpoint` | `http://localhost:8000` | Gateway URL |
-| `fail_mode` | `"fail_open"` | `"fail_open"` (allow on gateway error) or `"fail_closed"` (raise ShieldUnavailable) |
-| `on_detection` | `None` | Callback fired on every detection: `(result: DetectionResult) -> None` |
-
-## Exceptions
-
-- `BlockedByShield(reasoning, result)` — verdict was `"block"`; `exc.result` is the full `DetectionResult`
-- `ShieldUnavailable` — gateway unreachable and `fail_mode="fail_closed"`
-
-## OpenAI wrapper behaviour
-
-`shield.wrap(AsyncOpenAI(...))` returns a drop-in replacement that:
-
-1. Inspects every message in `messages` before the API call (direction=`input`)
-2. Makes the real OpenAI API call
-3. Inspects `response.choices[0].message.content` after (direction=`output`)
-4. Raises `BlockedByShield` at either step if the verdict is `block`
-
-## Telemetry callback
-
 ```python
-def on_detection(result):
-    metrics.increment("promptshield.detections", tags={"attack": result.attack_type})
-
-shield = Shield(api_key="ps_...", on_detection=on_detection)
+shield = Shield(
+    api_key="your-key",           # passed as X-API-Key header
+    endpoint="http://localhost:8000",
+    fail_mode="fail_open",        # "fail_open" | "fail_closed"
+    on_detection=my_callback,     # optional: called on every detection event
+)
 ```
 
-## Retry behaviour
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `api_key` | — | Gateway API key (X-API-Key header) |
+| `endpoint` | `http://localhost:8000` | Gateway base URL |
+| `fail_mode` | `fail_open` | What to do if the gateway is unreachable |
+| `on_detection` | `None` | Callback `(DetectionResult) -> None` on any non-allow verdict |
 
-Transient errors (5xx, network timeouts) are retried up to **3 times** with exponential
-backoff (0.5 s → 1 s → 2 s). All retries exhausted → `ShieldUnavailable`.
+## Environment variables
 
-## TestPyPI publish
+| Variable | Description |
+|----------|-------------|
+| `PROMPTSHIELD_ENDPOINT` | Overrides `endpoint` parameter |
+| `PROMPTSHIELD_API_KEY` | Overrides `api_key` parameter |
 
-```bash
-pip install build twine
-python -m build sdk/
-twine upload --repository testpypi sdk/dist/*
+## Package structure
+
+```
+promptshield/
+├── __init__.py       # Re-exports: Shield, BlockedByShield, DetectionResult
+├── client.py         # Shield class — inspect() and wrap()
+├── wrappers.py       # Transparent wrappers for OpenAI, Anthropic, LangChain
+├── models.py         # DetectionResult Pydantic model
+└── exceptions.py     # BlockedByShield, ShieldUnavailable
 ```

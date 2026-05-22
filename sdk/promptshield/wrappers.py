@@ -26,6 +26,13 @@ def _wrap(client: Any, shield: Shield) -> Any:
     except ImportError:
         pass
 
+    try:
+        import anthropic
+        if isinstance(client, (anthropic.AsyncAnthropic, anthropic.Anthropic)):
+            return _ProtectedAsyncAnthropic(client, shield)
+    except ImportError:
+        pass
+
     # Support both old AgentExecutor (langchain <1.0) and new CompiledStateGraph (langchain >=1.0)
     try:
         from langchain.agents import AgentExecutor
@@ -43,7 +50,8 @@ def _wrap(client: Any, shield: Shield) -> Any:
 
     raise TypeError(
         f"shield.wrap() does not support {type(client).__name__}. "
-        "Supported types: openai.AsyncOpenAI, langchain.agents.AgentExecutor"
+        "Supported types: openai.AsyncOpenAI, anthropic.AsyncAnthropic, "
+        "langchain.agents.AgentExecutor, langgraph.CompiledStateGraph"
     )
 
 
@@ -114,6 +122,71 @@ class _ProtectedCompletions:
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._completions, name)
+
+
+# ── Anthropic wrapper ─────────────────────────────────────────────────────────
+
+
+class _ProtectedAsyncAnthropic:
+    """Thin proxy around AsyncAnthropic / Anthropic; intercepts messages.create."""
+
+    def __init__(self, client: Any, shield: Shield) -> None:
+        self._client = client
+        self._shield = shield
+        self.messages = _ProtectedAnthropicMessages(client.messages, shield)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._client, name)
+
+
+class _ProtectedAnthropicMessages:
+    def __init__(self, messages: Any, shield: Shield) -> None:
+        self._messages = messages
+        self._shield = shield
+
+    async def create(self, messages: list[dict[str, Any]], **kwargs: Any) -> Any:
+        from .exceptions import BlockedByShield
+
+        for msg in messages:
+            raw = msg.get("content") or ""
+            # Anthropic content can be a string or a list of typed blocks
+            if isinstance(raw, list):
+                content = " ".join(
+                    b.get("text", "") for b in raw
+                    if isinstance(b, dict) and b.get("type") == "text"
+                )
+            else:
+                content = str(raw)
+            if not content.strip():
+                continue
+            source = "user" if msg.get("role") == "user" else "agent"
+            result = await self._shield.inspect(content=content, direction="input", source=source)
+            if result.verdict == "block":
+                raise BlockedByShield(result.reasoning, result)
+
+        # Call the real Anthropic API (sync clients get run via asyncio)
+        import asyncio
+        import inspect as _inspect
+        if _inspect.iscoroutinefunction(self._messages.create):
+            response = await self._messages.create(messages=messages, **kwargs)
+        else:
+            response = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: self._messages.create(messages=messages, **kwargs)
+            )
+
+        # Inspect output — response.content is a list of ContentBlock objects
+        output_text = "".join(
+            getattr(block, "text", "") for block in (response.content or [])
+        )
+        if output_text.strip():
+            result = await self._shield.inspect(content=output_text, direction="output", source="agent")
+            if result.verdict == "block":
+                raise BlockedByShield(result.reasoning, result)
+
+        return response
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._messages, name)
 
 
 # ── LangChain wrapper ─────────────────────────────────────────────────────────
